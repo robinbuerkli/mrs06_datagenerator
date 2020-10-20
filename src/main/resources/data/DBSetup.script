@@ -1,0 +1,3 @@
+create table if not exists movies (	Id UUID PRIMARY KEY, Title VARCHAR(255), IsRented BOOLEAN, ReleaseDate DATE, PriceCategory VARCHAR(20), AgeRating INTEGER );
+create table if not exists clients ( Id UUID PRIMARY KEY, Name VARCHAR(255), FirstName VARCHAR(255), Birthdate DATE );
+create table if not exists rentals ( Id UUID PRIMARY KEY, MovieId UUID, ClientId UUID, RentalDate DATE );

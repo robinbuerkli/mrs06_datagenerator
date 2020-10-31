@@ -9,11 +9,11 @@ import javax.sql.DataSource;
 
 public class DbLifeCycleMgmt {
     
-    private static final String createMoviesTable =
+	private static final String createMoviesTable =
             "CREATE TABLE IF NOT EXISTS movies ( "
             + "MovieId uuid NOT NULL, "
             + "Title text NOT NULL, "
-            + "IsRented boolean NOT NULL, "
+            + "Rented boolean NOT NULL, "
             + "ReleaseDate date NOT NULL, "
             + "PriceCategory text NOT NULL, "
             + "AgeRating integer NOT NULL, "
@@ -62,7 +62,7 @@ public class DbLifeCycleMgmt {
             statement.execute(createMoviesTable);
             statement.execute(createUsersTable);
             statement.execute(createRentalsTable);
-		} catch (SQLException se) {
+ 		} catch (SQLException se) {
 		    se.printStackTrace();
 		}
 	}

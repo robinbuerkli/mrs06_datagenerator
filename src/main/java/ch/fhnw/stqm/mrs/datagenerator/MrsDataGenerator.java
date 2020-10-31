@@ -19,20 +19,26 @@ public final class MrsDataGenerator {
 	public static void main(String[] args) throws Exception {
     	Properties props = readDbConfig("./db_config.properties");
     	
-    	String server = props.getProperty("server");
-        int port = Integer.parseInt(props.getProperty("port"));
-        String username = props.getProperty("user");
+    	String url = props.getProperty("url");
+    	String username = props.getProperty("user");
         String pwd = props.getProperty("pwd");
 	    int nOfUsers = Integer.parseInt(props.getProperty("users")); 
 	    int nOfMovies = Integer.parseInt(props.getProperty("movies"));
 	    int nOfRentals = Integer.parseInt(props.getProperty("rentals"));
 
 
-	    PostgreSqlDatabase db = new PostgreSqlDatabase(server, port, username, pwd);
-
-	    Dataloader loader = new GeneratingDataloader(db.getDataSource(), nOfUsers, nOfMovies, nOfRentals);
-	    loader.load();
-	    System.out.println("Datagenerator: done");
+	    PostgreSqlDatabase db = new PostgreSqlDatabase(url, username, pwd);
+	    
+	    if (args.length > 0 && "teardown".equals(args[0])) {
+	    	db.teardown();
+	    	System.out.println("Database dropped.");
+	    } else {
+		    db.setup();
+	
+		    Dataloader loader = new GeneratingDataloader(db.getDataSource(), nOfUsers, nOfMovies, nOfRentals);
+		    loader.load();
+		    System.out.println("Done: database generated and filled");
+	    }
 	}
 	
 	private static Properties readDbConfig(String configFile) throws FileNotFoundException, IOException {

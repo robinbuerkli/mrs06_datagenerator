@@ -19,8 +19,8 @@ public class GeneratingDataloader implements Dataloader {
     private static final int CURRENT_YEAR = TODAY.getYear();
     
     private static final String MOVIE_SQL = 
-            "INSERT INTO movies (MovieId, Title, IsRented, ReleaseDate, PriceCategory, AgeRating)"
-            + "  VALUES (:MovieId, :Title, :IsRented, :ReleaseDate, :PriceCategory, :AgeRating)";
+            "INSERT INTO movies (MovieId, Title, Rented, ReleaseDate, PriceCategory, AgeRating)"
+            + "  VALUES (:MovieId, :Title, :Rented, :ReleaseDate, :PriceCategory, :AgeRating)";
     private static final String USER_SQL = "INSERT INTO users (UserId, FirstName, Name, Birthdate) "
     		+ "  VALUES ( :UserId, :FirstName, :Name, :Birthdate )";
     private static final String RENTAL_SQL = "INSERT INTO rentals (RentalId, MovieId, UserId, RentalDate )"
@@ -122,7 +122,7 @@ public class GeneratingDataloader implements Dataloader {
     private void writeMovieToDb(Query q, Movie m) throws Exception {
     	q.addParameter("MovieId", m.movieid)
     	.addParameter("Title", m.title)
-    	.addParameter("IsRented", m.rented)
+    	.addParameter("Rented", m.rented)
     	.addParameter("ReleaseDate", m.releasedAt)
     	.addParameter("PriceCategory", m.priceCategory)
     	.addParameter("AgeRating", m.rating)

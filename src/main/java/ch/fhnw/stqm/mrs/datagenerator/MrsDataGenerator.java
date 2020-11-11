@@ -17,36 +17,36 @@ public final class MrsDataGenerator {
      * @throws Exception whenever something goes wrong.
      */
 	public static void main(String[] args) throws Exception {
-    	Properties props = readDbConfig("./db_config.properties");
-    	
-    	String url = props.getProperty("url");
-    	String username = props.getProperty("user");
-        String pwd = props.getProperty("pwd");
-	    int nOfUsers = Integer.parseInt(props.getProperty("users")); 
-	    int nOfMovies = Integer.parseInt(props.getProperty("movies"));
-	    int nOfRentals = Integer.parseInt(props.getProperty("rentals"));
 
 
-	    PostgreSqlDatabase db = new PostgreSqlDatabase(url, username, pwd);
+	    // specify claspatgh to the config file
+	    PostgreSqlDatabase db = new PostgreSqlDatabase("/db_config.properties");
+	    
+	    Properties props = db.getProperties();
+	    
+        int nOfUsers = Integer.parseInt(props.getProperty("users")); 
+        int nOfMovies = Integer.parseInt(props.getProperty("movies"));
+        int nOfRentals = Integer.parseInt(props.getProperty("rentals"));
 	    
 	    if (args.length > 0 && "teardown".equals(args[0])) {
 	    	db.teardown();
 	    	System.out.println("Database dropped.");
-	    } else {
-		    db.setup();
-	
-		    Dataloader loader = new GeneratingDataloader(db.getDataSource(), nOfUsers, nOfMovies, nOfRentals);
-		    loader.load();
-		    System.out.println("Done: database generated and filled");
+	    	return;
+	    } else if (args.length == 3) { // assume the numbers are passed int
+	        nOfUsers = Integer.parseInt(args[0]); 
+	        nOfMovies = Integer.parseInt(args[1]);
+	        nOfRentals = Integer.parseInt(args[2]);
 	    }
+
+	    
+	    db.setup();
+	
+		Dataloader loader = new GeneratingDataloader(db.getDataSource(), nOfUsers, nOfMovies, nOfRentals);
+		loader.load();
+		System.out.println("Done: database generated and filled");
+
 	}
 	
-	private static Properties readDbConfig(String configFile) throws FileNotFoundException, IOException {
-		Properties prop = new Properties();
-        InputStream input = new FileInputStream(configFile);
-    	prop.load(input);
-		return prop;
-	}
 	
 	/**
 	 * Prevent instantiation.

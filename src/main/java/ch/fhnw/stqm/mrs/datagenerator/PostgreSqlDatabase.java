@@ -1,5 +1,10 @@
 package ch.fhnw.stqm.mrs.datagenerator;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.postgresql.ds.PGSimpleDataSource;
@@ -9,7 +14,34 @@ import org.postgresql.ds.PGSimpleDataSource;
  */
 public final class PostgreSqlDatabase implements Database {
 	private PGSimpleDataSource ds;
+	private Properties props; 
 
+    public PostgreSqlDatabase(String pathToConfig) throws Exception {
+        props = readDbConfig(pathToConfig);
+        
+        String url = props.getProperty("url");
+        String username = props.getProperty("user");
+        String pwd = props.getProperty("pwd");
+
+        ds = new PGSimpleDataSource();
+        ds.setUrl(url);
+        ds.setUser(username);
+        ds.setPassword(pwd);
+    }
+
+    private Properties readDbConfig(String configFile) throws FileNotFoundException, IOException {
+        Properties prop = new Properties();
+        // note: getResourceAsStream works with classpath
+        // see https://stackoverflow.com/questions/18053059/getresourceasstream-is-returning-null-properties-file-is-not-loading
+        InputStream input = getClass().getResourceAsStream(configFile);
+        prop.load(input);
+        return prop;
+    }
+    
+    public Properties getProperties() {
+        return this.props;
+    }
+    
     /** 
      * Create a connection to a database.
      * @throws Exception whenever something goes wrong.

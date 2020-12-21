@@ -100,7 +100,10 @@ public class GeneratingDataloader implements Dataloader {
         	
         	var movies = new Entry[maxRentals]; 
 	        for (int i = 0; i < maxMovies; i++) {
-	        	Movie m = generateSingleMovie();
+
+                // generate one illegal movie
+                Movie m = i == maxMovies/2 ? generateIllegalMovie() : generateSingleMovie();
+
 	            if (m.rented && actualRentals < maxRentals) {
 	            	movies[actualRentals++] = new Entry(m.movieid, m.rating);
 	            } else {
@@ -118,6 +121,7 @@ public class GeneratingDataloader implements Dataloader {
 	        return movies;
         }
     }
+
 
     private void writeMovieToDb(Query q, Movie m) throws Exception {
     	q.addParameter("MovieId", m.movieid)
@@ -199,7 +203,7 @@ public class GeneratingDataloader implements Dataloader {
     }
     
     private Movie generateSingleMovie() {
-    	Movie m = new Movie();   	
+    	Movie m = new Movie();
         m.title = generateString(40);
         m.releasedAt = generateDate(100);
         m.rating = rnd.nextInt(19);
@@ -215,6 +219,26 @@ public class GeneratingDataloader implements Dataloader {
         m.rented = rnd.nextDouble() < rentedRatio;
         m.movieid = UUID.randomUUID();    	
     	return m;
+    }
+
+
+    private Movie generateIllegalMovie() {
+        Movie m = new Movie();
+        m.title = "ILLEGAL_MOVIE";
+        m.releasedAt = LocalDate.ofYearDay(LocalDate.now().getYear() + 55, 1);
+        m.rating = rnd.nextInt(19);
+        int type = rnd.nextInt(100);
+        if (type <= NEW_RELEASE_PERCENTAGE) {
+            m.priceCategory = "New Release";
+        } else if (type <= NEW_RELEASE_PERCENTAGE + CHILDREN_PERCENTAGE) {
+            m.priceCategory = "Children";
+            m.rating = rnd.nextInt(13);
+        } else {
+            m.priceCategory = "Regular";
+        }
+        m.rented = rnd.nextDouble() < rentedRatio;
+        m.movieid = UUID.randomUUID();
+        return m;
     }
     
     private static class User {

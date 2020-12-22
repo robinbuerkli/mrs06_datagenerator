@@ -183,7 +183,7 @@ public class GeneratingDataloader implements Dataloader {
     }
 
     private LocalDate generateDate(int maxAge) {
-        int year = randBetween(CURRENT_YEAR - maxAge, CURRENT_YEAR);
+        int year = randBetween(CURRENT_YEAR - maxAge, CURRENT_YEAR - 1);
         int dayOfYear = randBetween(1, 365);
 
         return LocalDate.ofYearDay(year, dayOfYear);

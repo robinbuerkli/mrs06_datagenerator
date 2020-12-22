@@ -17,16 +17,13 @@ public final class MrsDataGenerator {
      * @throws Exception whenever something goes wrong.
      */
 	public static void main(String[] args) throws Exception {
-
-
 	    // specify claspatgh to the config file
-	    PostgreSqlDatabase db = new PostgreSqlDatabase("/db_config.properties");
-	    
-	    Properties props = db.getProperties();
-	    
-        int nOfUsers = Integer.parseInt(props.getProperty("users")); 
-        int nOfMovies = Integer.parseInt(props.getProperty("movies"));
-        int nOfRentals = Integer.parseInt(props.getProperty("rentals"));
+	    PostgreSqlDatabase db = new PostgreSqlDatabase();
+
+
+        int nOfUsers = Integer.parseInt(System.getenv("MRS_USERS"));
+        int nOfMovies = Integer.parseInt(System.getenv("MRS_MOVIES"));
+        int nOfRentals = Integer.parseInt(System.getenv("MRS_RENTALS"));
 	    
 	    if (args.length > 0 && "teardown".equals(args[0])) {
 	    	db.teardown();

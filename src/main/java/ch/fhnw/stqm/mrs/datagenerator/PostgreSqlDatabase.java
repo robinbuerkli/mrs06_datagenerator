@@ -14,42 +14,16 @@ import org.postgresql.ds.PGSimpleDataSource;
  */
 public final class PostgreSqlDatabase implements Database {
 	private PGSimpleDataSource ds;
-	private Properties props; 
 
-    public PostgreSqlDatabase(String pathToConfig) throws Exception {
-        props = readDbConfig(pathToConfig);
-        
-        String url = props.getProperty("url");
-        String username = props.getProperty("user");
-        String pwd = props.getProperty("pwd");
+    public PostgreSqlDatabase() throws Exception {
+        String username = System.getenv("POSTGRES_USER");
+        String pwd = System.getenv("POSTGRES_PASSWORD");
+        String db =  System.getenv("POSTGRES_DB");
+        String url = String.format("jdbc:postgresql://:5432/%s?socketFactory=org.newsclub.net.unix.socketfactory.PostgresqlAFUNIXSocketFactory&socketFactoryArg=/var/run/postgresql/.s.PGSQL.5432", db);
 
         ds = new PGSimpleDataSource();
-        ds.setUrl(url);
+        ds.setURL(url);
         ds.setUser(username);
-        ds.setPassword(pwd);
-    }
-
-    private Properties readDbConfig(String configFile) throws FileNotFoundException, IOException {
-        Properties prop = new Properties();
-        // note: getResourceAsStream works with classpath
-        // see https://stackoverflow.com/questions/18053059/getresourceasstream-is-returning-null-properties-file-is-not-loading
-        InputStream input = getClass().getResourceAsStream(configFile);
-        prop.load(input);
-        return prop;
-    }
-    
-    public Properties getProperties() {
-        return this.props;
-    }
-    
-    /** 
-     * Create a connection to a database.
-     * @throws Exception whenever something goes wrong.
-     */
-    public PostgreSqlDatabase(String url, String user, String pwd) throws Exception {
-    	ds = new PGSimpleDataSource();
-    	ds.setUrl(url);
-        ds.setUser(user);
         ds.setPassword(pwd);
     }
     

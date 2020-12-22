@@ -78,5 +78,18 @@
 			<version>1.0.0</version>
 		</dependency>
 
+        <dependency>
+            <groupId>no.fiken.oss.junixsocket</groupId>
+            <artifactId>junixsocket-common</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.fiken.oss.junixsocket</groupId>
+            <artifactId>junixsocket-native-common</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+
 	</dependencies>
 </project>

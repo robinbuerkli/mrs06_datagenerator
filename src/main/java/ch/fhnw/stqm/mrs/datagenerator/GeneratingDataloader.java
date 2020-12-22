@@ -236,7 +236,7 @@ public class GeneratingDataloader implements Dataloader {
         } else {
             m.priceCategory = "Regular";
         }
-        m.rented = rnd.nextDouble() < rentedRatio;
+        m.rented = false;
         m.movieid = UUID.randomUUID();
         return m;
     }
